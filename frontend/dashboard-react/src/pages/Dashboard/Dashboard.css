@@ -1,0 +1,441 @@
+/* ====== PANEL FUTURISTA ====== */
+.dashboard-container-futuristic {
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, #001f0f 0%, #0a2f1d 35%, #001208 100%);
+  color: #e0ffe5;
+  padding: 2rem;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+.dashboard-header-futuristic {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.dashboard-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00ff88;
+  text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+}
+
+.dashboard-title span {
+  color: #8effc3;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #b6ffcb;
+  opacity: 0.85;
+  margin-top: 0.3rem;
+}
+
+/* NAVIGATION BAR */
+.dashboard-nav-futuristic {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.nav-item-futuristic {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.8rem 1.8rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 16px;
+  color: #ccffd9;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+}
+
+.nav-item-futuristic:hover {
+  background: rgba(0, 255, 136, 0.15);
+  color: #fff;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.nav-item-futuristic.active {
+  background: linear-gradient(90deg, #00ff88, #00bfa5);
+  border-color: transparent;
+  color: #001a0f;
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
+}
+
+/* MAIN CONTENT AREA */
+.dashboard-content-futuristic {
+  background: rgba(0, 20, 10, 0.5); /* fondo sólido con leve transparencia */
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid rgba(0, 255, 136, 0.15);
+  backdrop-filter: none; /* ❌ quita el blur que crea la neblina */
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); /* sombra sutil sin bruma */
+  min-height: 60vh;
+  transition: all 0.3s ease;
+}
+
+/* Mantén solo un glow elegante al hover */
+.dashboard-content-futuristic:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.25);
+}
+
+
+/* ANIMATED BORDER GLOW */
+.dashboard-content-futuristic:hover {
+  box-shadow: inset 0 0 25px rgba(0, 255, 136, 0.2), 0 0 35px rgba(0, 255, 136, 0.3);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .dashboard-title {
+    flex-direction: column;
+    font-size: 1.6rem;
+  }
+
+  .nav-item-futuristic {
+    width: 100%;
+    justify-content: center;
+  }
+}
+/* 🌿 Live Dashboard Futurista */
+.live-dashboard-futuristic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #e0ffe5;
+  text-align: center;
+}
+
+.live-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #aaffcc;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.live-icon {
+  color: #00ff88;
+  filter: drop-shadow(0 0 5px #00ff88);
+}
+
+.live-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 950px;
+}
+
+.sensor-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-left: 6px solid;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.sensor-card:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.25);
+}
+
+.sensor-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.sensor-icon {
+  font-size: 1.5rem;
+}
+
+.sensor-value h2 {
+  font-size: 2.2rem;
+  margin: 0.5rem 0;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+}
+
+.sensor-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0.8rem 0;
+}
+
+.sensor-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+}
+
+.sensor-status {
+  font-size: 0.9rem;
+  color: #b6ffcb;
+}
+
+/* 🔵 Estado de conexión animado */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2rem;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  background: #00ff88;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00ff88;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+}
+/* 🌾 HISTÓRICO DE SENSORES FUTURISTA */
+.history-dashboard-futuristic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #e0ffe5;
+  text-align: center;
+}
+
+.history-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #aaffcc;
+  margin-bottom: 2.5rem;
+  text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+}
+
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.8rem;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* TARJETAS DE GRÁFICAS */
+.chart-card-futuristic {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.chart-card-futuristic:hover {
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: #ccffd9;
+}
+
+.chart-header h5 {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Animación suave para charts */
+canvas {
+  transition: all 0.3s ease-in-out;
+  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.1));
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .history-title {
+    font-size: 1.4rem;
+  }
+}
+/* === MAPA FUTURISTA === */
+.map-dashboard-futuristic {
+  text-align: center;
+  color: #e0ffe5;
+  padding: 1rem 0 3rem;
+}
+
+.map-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0.6rem;
+}
+
+.map-header-icon {
+  font-size: 1.8rem;
+  color: #00ff88;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.5));
+}
+
+.map-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #00ff88;
+  text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+  margin: 0;
+}
+
+.map-subtitle {
+  color: #aaffcc;
+  opacity: 0.85;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.subtitle-icon {
+  color: #00ff88;
+  font-size: 1.1rem;
+  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.6));
+}
+
+.map-wrapper {
+  border-radius: 20px;
+  background: rgba(0, 255, 136, 0.05);
+  padding: 8px;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.map-wrapper:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.25);
+}
+
+/* === POPUPS === */
+.leaflet-popup-content-wrapper {
+  background: rgba(0, 25, 15, 0.96);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  color: #e0ffe5;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.25);
+  backdrop-filter: blur(6px);
+}
+
+.leaflet-popup-tip {
+  background: rgba(0, 25, 15, 0.96);
+}
+
+.popup-content h4 {
+  margin: 0;
+  color: #00ff88;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.popup-icon {
+  color: #00ff88;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.4));
+}
+
+.popup-content p {
+  font-size: 0.9rem;
+  color: #caffd9;
+  margin-bottom: 8px;
+}
+
+.popup-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #00ff88;
+  font-weight: 600;
+}
+
+.status-icon {
+  font-size: 0.9rem;
+  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.5));
+}
+
+/* === CONTROLES === */
+.leaflet-control-zoom {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+}
+
+.leaflet-control-zoom a {
+  background: #0f1f17;
+  color: #00ff88;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.leaflet-control-zoom a:hover {
+  background: #00ff88;
+  color: #0f1f17;
+}
+/* Animación de carga */
+.spin {
+  color: #00ff88;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
