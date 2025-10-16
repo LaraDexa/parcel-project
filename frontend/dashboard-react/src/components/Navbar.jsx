@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import LogoutButton from "./LogoutButton";
 
 function Navbar() {
   return (
@@ -13,6 +14,7 @@ function Navbar() {
         <Link className="btn btn-light text-success" to="/login">
           Login
         </Link>
+        <LogoutButton />
       </div>
     </nav>
   );
