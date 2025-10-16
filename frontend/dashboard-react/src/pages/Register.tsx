@@ -77,7 +77,7 @@ function Register() {
           </div>
           <h4 className="text-center mb-2 fw-bold text-light">Crear cuenta</h4>
           <p className="text-center mb-4" style={{ color: "rgba(255,255,255,0.8)" }}>
-            Bienvenido al huerto digital 🌱
+            Bienvenidos al huerto digital 🌱
           </p>
 
           {errorMsg && (

@@ -55,7 +55,7 @@ app.get('/api/plots/:id', async (req, res) => {
 app.post('/api/plots', async (req, res) => {
   const { name, lat, lng, areaHa, cropId, responsibleId } = req.body;
   if (!name || lat == null || lng == null) {
-    return res.status(400).json({ message: 'name, lat, lng son obligatorios' });
+    return res.status(400).json({ message: 'name, lat, lng son obligatorioss' });
   }
   const created = await prisma.plot.create({
     data: {
