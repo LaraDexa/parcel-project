@@ -57,6 +57,7 @@ app.post('/api/plots', async (req, res) => {
   if (!name || lat == null || lng == null) {
     return res.status(400).json({ message: 'name, lat, lng son obligatorioss' });
   }
+
   const created = await prisma.plot.create({
     data: {
       name,
@@ -66,9 +67,15 @@ app.post('/api/plots', async (req, res) => {
       crop: cropId ? { connect: { id: Number(cropId) } } : undefined,
       responsible: responsibleId ? { connect: { id: Number(responsibleId) } } : undefined,
     },
+    include: {
+      crop: true,
+      responsible: { select: { id: true, name: true, email: true } },
+    },
   });
+
   res.status(201).json(created);
 });
+
 
 app.put('/api/plots/:id', async (req, res) => {
   const id = Number(req.params.id);
@@ -117,9 +124,38 @@ app.listen(PORT, () => {
   console.log(`API running on http://localhost:${PORT}`);
 });
 
+app.patch('/api/plots/:id/restore', async (req, res) => {
+  const id = Number(req.params.id);
+  const existing = await prisma.plot.findUnique({ where: { id } });
+  if (!existing) return res.status(404).json({ message: 'Plot not found' });
+
+  const updated = await prisma.plot.update({
+    where: { id },
+    data: { status: 'active', deletedAt: null },
+    // 👇 igual que en POST/PUT: devuelve con relaciones
+    include: {
+      crop: true,
+      responsible: { select: { id: true, name: true, email: true } },
+    },
+  });
+
+  res.json(updated);
+});
+
+
+
 // ========= AUTH =========
 
-// Registro
+// helper para leer roles del usuario por nombre
+async function getUserRoles(prisma, userId) {
+  const rows = await prisma.userRole.findMany({
+    where: { userId },
+    include: { role: true },
+  });
+  return rows.map(r => r.role.name); // ["admin"] o ["user"]
+}
+
+// === Registro
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -130,52 +166,69 @@ app.post("/api/auth/register", async (req, res) => {
     if (exists) return res.status(409).json({ message: "Email ya registrado" });
 
     const passwordHash = await bcrypt.hash(password, 10);
-
     const user = await prisma.user.create({
       data: { name, email, passwordHash },
       select: { id: true, name: true, email: true },
     });
 
-    // (opcional) asignar rol "user"
+    // asigna rol 'user' por defecto
     const roleUser = await prisma.role.findUnique({ where: { name: "user" } });
     if (roleUser) {
       await prisma.userRole.create({ data: { userId: user.id, roleId: roleUser.id } });
     }
 
-    const token = signToken({ id: user.id, email: user.email, name: user.name });
-    res.status(201).json({ user, token });
+    const roles = await getUserRoles(prisma, user.id);
+    const token = signToken({ id: user.id, email: user.email, name: user.name, roles });
+
+    res.status(201).json({ user: { ...user, roles }, token });
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Error al registrar" });
   }
 });
 
-// Login
+// === Login
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password)
       return res.status(400).json({ message: "email y password son obligatorios" });
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ message: "Credenciales inválidas" });
+    const userRow = await prisma.user.findUnique({ where: { email } });
+    if (!userRow) return res.status(401).json({ message: "Credenciales inválidas" });
 
-    const ok = await bcrypt.compare(password, user.passwordHash);
+    const ok = await bcrypt.compare(password, userRow.passwordHash);
     if (!ok) return res.status(401).json({ message: "Credenciales inválidas" });
 
-    const token = signToken({ id: user.id, email: user.email, name: user.name });
-    res.json({ user: { id: user.id, name: user.name, email: user.email }, token });
+    const roles = await getUserRoles(prisma, userRow.id);
+    const token = signToken({ id: userRow.id, email: userRow.email, name: userRow.name, roles });
+
+    const user = { id: userRow.id, name: userRow.name, email: userRow.email, roles };
+    res.json({ user, token });
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Error al iniciar sesión" });
   }
 });
 
-// Perfil autenticado
+// === Perfil
 app.get("/api/auth/me", authRequired, async (req, res) => {
   const me = await prisma.user.findUnique({
     where: { id: req.user.id },
     select: { id: true, name: true, email: true },
   });
-  res.json(me);
+  if (!me) return res.status(404).json({ message: "Usuario no encontrado" });
+
+  const roles = await getUserRoles(prisma, me.id);
+  res.json({ ...me, roles });
 });
+
+app.get('/api/users', async (_req, res) => {
+  const rows = await prisma.user.findMany({
+    where: { isActive: true },
+    select: { id: true, name: true, email: true },
+    orderBy: { name: 'asc' },
+  });
+  res.json(rows);
+});
+

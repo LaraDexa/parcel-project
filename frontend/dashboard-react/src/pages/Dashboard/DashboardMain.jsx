@@ -9,8 +9,11 @@ import {
   FaSatellite,
 } from "react-icons/fa";
 import "./Dashboard.css";
+import { useAuth } from "../../core/AuthContext";
 
 function DashboardMain() {
+  const { user } = useAuth();
+  const isAdmin = user?.roles?.includes("admin");
   return (
     <div className="dashboard-container-futuristic">
       {/* HEADER */}
@@ -57,19 +60,23 @@ function DashboardMain() {
           <FaMapMarkedAlt /> <span>Mapa</span>
         </NavLink>
 
-        <NavLink
-          to="/dashboard/parcels"
-          className={({ isActive }) => `nav-item-futuristic ${isActive ? "active" : ""}`}
-        >
-          <FaTractor /> <span>Parcelas</span>
-        </NavLink>
+        {isAdmin && (
+          <NavLink
+            to="/dashboard/parcels"
+            className={({ isActive }) => `nav-item-futuristic ${isActive ? "active" : ""}`}
+          >
+            <FaTractor /> <span>Parcelas</span>
+          </NavLink>
+        )}
 
-        <NavLink
-          to="/dashboard/deleted"
-          className={({ isActive }) => `nav-item-futuristic ${isActive ? "active" : ""}`}
-        >
-          <FaTrashAlt /> <span>Eliminadas</span>
-        </NavLink>
+        {isAdmin && (
+          <NavLink
+            to="/dashboard/deleted"
+            className={({ isActive }) => `nav-item-futuristic ${isActive ? "active" : ""}`}
+          >
+            <FaTrashAlt /> <span>Eliminadas</span>
+          </NavLink>
+        )}
       </motion.nav>
 
       {/* CONTENT AREA */}

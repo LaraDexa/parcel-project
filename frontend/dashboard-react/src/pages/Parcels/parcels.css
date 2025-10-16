@@ -190,7 +190,9 @@
   margin-bottom: 6px;
 }
 
-.form-group input {
+/* Inputs y selects (campo) */
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 0.7rem;
   border-radius: 10px;
@@ -199,11 +201,75 @@
   color: #e0ffe5;
   outline: none;
   transition: 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2rem; /* espacio para la flecha custom */
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   border-color: #00ff88;
   box-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
+}
+
+.form-group.select-like {
+  position: relative;
+}
+
+.form-group.select-like::after {
+  content: "▾";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #aaffcc;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+/* ====== SELECT: dropdown oscuro a juego ====== */
+
+/* Oculta flecha nativa en IE/Edge legacy */
+.form-group select::-ms-expand {
+  display: none;
+}
+
+/* Fondo y color de las opciones del menú desplegable */
+.form-group select option,
+.form-group select optgroup {
+  background: rgba(10, 25, 20, 0.98); /* mismo tono que la modal */
+  color: #e0ffe5;
+}
+
+/* Estado disabled del select */
+.form-group select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Scrollbar (WebKit: Chrome/Edge/Safari) */
+.form-group select::-webkit-scrollbar {
+  width: 10px;
+}
+.form-group select::-webkit-scrollbar-track {
+  background: rgba(10, 25, 20, 0.8);
+  border-radius: 8px;
+}
+.form-group select::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 136, 0.25);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 136, 0.4);
+}
+.form-group select::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 136, 0.4);
+}
+
+/* Scrollbar (Firefox) */
+.form-group select {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 136, 0.35) rgba(10, 25, 20, 0.8);
 }
 
 .modal-actions {
@@ -378,6 +444,7 @@
   font-size: 3rem;
   opacity: 0.5;
 }
+
 .deleted-actions {
   display: flex;
   justify-content: flex-end;

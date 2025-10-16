@@ -34,13 +34,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     const u = await authService.login({ email, password });
     setUser(u);
-    navigate("/dashboard", { replace: true });
+    navigate("/dashboard/live", { replace: true });
   };
 
   const register = async (name: string, email: string, password: string) => {
     const u = await authService.register({ name, email, password });
     setUser(u);
-    navigate("/dashboard", { replace: true });
+    navigate("/dashboard/live", { replace: true });
   };
 
   const logout = () => {

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaLeaf, FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { authService } from "../core/authService"; // ajusta la ruta si difiere
+import { useAuth } from "../core/AuthContext";
+
 
 function LoginForm() {
   const [email, setEmail] = useState<string>("");
@@ -10,7 +11,8 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const navigate = useNavigate();
+
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,9 +25,7 @@ function LoginForm() {
 
     try {
       setSubmitting(true);
-      await authService.login({ email: email.trim(), password });
-      // token guardado en localStorage por el service
-      navigate("/dashboard", { replace: true });
+      await login(email.trim(), password);
     } catch (err: any) {
       setErrorMsg(err?.message || "Credenciales inválidas.");
     } finally {

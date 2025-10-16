@@ -4,49 +4,56 @@ import { FaPlus, FaEdit, FaTrash, FaTractor, FaExclamationTriangle } from "react
 import ParcelFormModal from "./ParcelFormModal";
 import { useParcels } from "../../context/ParcelsContext";
 import "./parcels.css";
+// import { useParcels } from "../../context/ParcelsContext";
 
 function ParcelsDashboard() {
-  const { parcelas, addParcela, editParcela, deleteParcela, parcelasEliminadas } = useParcels();
+  const { parcelas, addParcela, editParcela, deleteParcela } = useParcels();
 
   const [showModal, setShowModal] = useState(false);
   const [selectedParcela, setSelectedParcela] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   // 📦 Guardar parcelas en localStorage (persistencia)
-  useEffect(() => {
-    localStorage.setItem("parcelas", JSON.stringify(parcelas));
-  }, [parcelas]);
+  const handleSave = async (formData) => {
+    // formData viene de ParcelFormModal
+    // { nombre, lat, lng, areaHa?, cultivoId?, responsableId? }
+    const payload = {
+      name: String(formData.nombre).trim(),
+      lat: Number(formData.lat),
+      lng: Number(formData.lng),
+      areaHa: formData.areaHa ? Number(formData.areaHa) : 0,
+      cropId: formData.cultivoId ? Number(formData.cultivoId) : null,
+      responsibleId: formData.responsableId ? Number(formData.responsableId) : null,
+    };
 
-  useEffect(() => {
-    localStorage.setItem("parcelasEliminadas", JSON.stringify(parcelasEliminadas));
-  }, [parcelasEliminadas]);
-
-  // 🧩 Guardar o editar
-  const handleSave = (formData) => {
     if (selectedParcela) {
-      editParcela({ ...selectedParcela, ...formData });
+      await editParcela(selectedParcela.id, payload);
     } else {
-      const newParcela = {
-        id: Date.now(),
-        ...formData,
-        lat: parseFloat(formData.lat),
-        lng: parseFloat(formData.lng),
-      };
-      addParcela(newParcela);
+      await addParcela(payload);
     }
-
     setShowModal(false);
     setSelectedParcela(null);
   };
 
-  // 🗑️ Confirmar eliminación
-  const handleDeleteRequest = (parcela) => {
-    setConfirmDelete(parcela);
+  const handleDeleteRequest = (parcela) => setConfirmDelete(parcela);
+  const confirmDeleteAction = async () => {
+    await deleteParcela(confirmDelete.id);
+    setConfirmDelete(null);
   };
 
-  const confirmDeleteAction = () => {
-    deleteParcela(confirmDelete.id); // 🔁 Elimina también del mapa
-    setConfirmDelete(null);
+  // helper seguro para Decimal | string | number
+  const toNum = (v) => {
+    // Prisma Decimal trae .toNumber()
+    if (v && typeof v === "object" && typeof v.toNumber === "function") {
+      return v.toNumber();
+    }
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  const fmtCoord = (v) => {
+    const n = toNum(v);
+    return n == null ? "-" : n.toFixed(4);
   };
 
   return (
@@ -93,15 +100,20 @@ function ParcelsDashboard() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <td>{p.nombre}</td>
-                  <td>{p.ubicacion}</td>
-                  <td>{p.cultivo}</td>
-                  <td>{p.responsable}</td>
+                  <td>{p.name}</td>
+
+                  {/* ❌ p.ubicacion no existe; usa algo útil del schema, por ejemplo área */}
+                  <td>{p.areaHa ?? "-"}</td>
+
+                  <td>{p.crop?.name || "-"}</td>
+                  <td>{p.responsible?.name || "-"}</td>
+
                   <td>
                     <small>
-                      {p.lat?.toFixed(4)}, {p.lng?.toFixed(4)}
+                      {fmtCoord(p.lat)}, {fmtCoord(p.lng)}
                     </small>
                   </td>
+
                   <td>
                     <button
                       className="btn-edit"
@@ -162,7 +174,7 @@ function ParcelsDashboard() {
               <FaExclamationTriangle className="modal-warning-icon" />
               <h3>Confirmar Eliminación</h3>
               <p>
-                ¿Deseas eliminar la parcela <strong>{confirmDelete.nombre}</strong>?
+                ¿Deseas eliminar la parcela <strong>{confirmDelete.name}</strong>?
               </p>
               <div className="modal-actions">
                 <button className="btn-cancelar" onClick={() => setConfirmDelete(null)}>

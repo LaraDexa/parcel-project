@@ -46,11 +46,52 @@ function AppContent() {
             </ProtectedRoute>
           }
         >
-          <Route path="live" element={<LiveDashboard />} />
-          <Route path="history" element={<HistoryDashboard />} />
-          <Route path="map" element={<MapDashboard />} />
-          <Route path="parcels" element={<ParcelsDashboard />} />
-          <Route path="deleted" element={<DeletedParcels />} />
+          {/* /dashboard -> /dashboard/live */}
+          <Route index element={<Navigate to="live" replace />} />
+
+          {/* Acceso para user y admin */}
+          <Route
+            path="live"
+            element={
+              <ProtectedRoute allowedRoles={["user", "admin"]}>
+                <LiveDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="history"
+            element={
+              <ProtectedRoute allowedRoles={["user", "admin"]}>
+                <HistoryDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="map"
+            element={
+              <ProtectedRoute allowedRoles={["user", "admin"]}>
+                <MapDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Solo admin */}
+          <Route
+            path="parcels"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <ParcelsDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="deleted"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <DeletedParcels />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* 404 */}

@@ -22,13 +22,24 @@ a:hover {
   color: #535bf2;
 }
 
+html, body, #root {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  overflow-y: auto;      /* ✅ scroll global habilitado */
 }
+
+/* Evita que el template de Vite centre todo con flex */
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 
 h1 {
   font-size: 3.2em;

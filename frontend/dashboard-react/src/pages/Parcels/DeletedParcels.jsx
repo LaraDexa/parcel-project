@@ -69,16 +69,24 @@ function DeletedParcels() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <td>{p.nombre}</td>
-                  <td>{p.ubicacion}</td>
-                  <td>{p.cultivo}</td>
-                  <td>{p.responsable || "—"}</td>
+                  <td>{p.name}</td>
+                  <td>
+                    <small>
+                      {typeof p.lat === "number" && typeof p.lng === "number"
+                        ? `${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}`
+                        : "—"}
+                    </small>
+                  </td>
+                  <td>{p.crop?.name || "—"}</td>
+                  <td>{p.responsible?.name || "—"}</td>
                   <td className="fecha">
                     <FaClock className="clock-icon" />{" "}
-                    {new Date(p.fechaEliminacion).toLocaleString("es-MX", {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })}
+                    {p.deletedAt
+                      ? new Date(p.deletedAt).toLocaleString("es-MX", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })
+                      : "—"}
                   </td>
                   <td>
                     <button className="btn-restore" onClick={() => setConfirmRestore(p)}>
@@ -122,7 +130,7 @@ function DeletedParcels() {
               <FaExclamationTriangle className="modal-warning-icon" />
               <h3>Confirmar Restauración</h3>
               <p>
-                ¿Deseas restaurar la parcela <strong>{confirmRestore.nombre}</strong>?
+                ¿Deseas restaurar la parcela <strong>{confirmRestore.name}</strong>?
               </p>
               <div className="modal-actions">
                 <button className="btn-cancelar" onClick={() => setConfirmRestore(null)}>
@@ -130,8 +138,8 @@ function DeletedParcels() {
                 </button>
                 <button
                   className="btn-confirmar"
-                  onClick={() => {
-                    restoreParcela(confirmRestore.id);
+                  onClick={async () => {
+                    await restoreParcela(confirmRestore.id);
                     setConfirmRestore(null);
                   }}
                 >

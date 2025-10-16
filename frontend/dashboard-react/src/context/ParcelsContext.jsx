@@ -1,110 +1,103 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { plotsService } from "../core/plotsService";
 
 const ParcelsContext = createContext();
 
 export function ParcelsProvider({ children }) {
-  // 🌾 Parcelas activas y eliminadas
-  const [parcelas, setParcelas] = useState([]);
-  const [parcelasEliminadas, setParcelasEliminadas] = useState([]);
+  const [parcelas, setParcelas] = useState([]); // activos
+  const [parcelasEliminadas, setParcelasEliminadas] = useState([]); // deleted
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // 📦 Cargar desde localStorage al iniciar
+  async function refresh() {
+    setLoading(true);
+    setError(null);
+    try {
+      const [activos, deleted] = await Promise.all([
+        plotsService.list("active"),
+        plotsService.listDeleted(),
+      ]);
+      setParcelas(activos);
+      setParcelasEliminadas(deleted);
+    } catch (e) {
+      setError(e?.message || "Error cargando parcelas");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    const storedParcelas = JSON.parse(localStorage.getItem("parcelas")) || [];
-    const storedDeleted = JSON.parse(localStorage.getItem("parcelasEliminadas")) || [];
-
-    setParcelas(storedParcelas);
-    setParcelasEliminadas(storedDeleted);
+    refresh();
   }, []);
 
-  // 💾 Guardar en localStorage cada vez que cambien
-  useEffect(() => {
-    localStorage.setItem("parcelas", JSON.stringify(parcelas));
-  }, [parcelas]);
+  // CREATE
+  async function addParcela(input) {
+    const created = await plotsService.create(input);
+    setParcelas((prev) => [created, ...prev]);
+    return created;
+  }
 
-  useEffect(() => {
-    localStorage.setItem("parcelasEliminadas", JSON.stringify(parcelasEliminadas));
-  }, [parcelasEliminadas]);
+  // UPDATE
+  async function editParcela(id, input) {
+    const updated = await plotsService.update(id, input);
+    setParcelas((prev) => prev.map((p) => (p.id === id ? updated : p)));
+    // si el status cambió a deleted por algún motivo, re-sync
+    if (updated.status === "deleted") await refresh();
+    return updated;
+  }
 
-  // ➕ Agregar o actualizar parcela (evita duplicados)
-  const addParcela = (nuevaParcela) => {
-    setParcelas((prev) => {
-      const existe = prev.some((p) => p.id === nuevaParcela.id);
-      if (existe) {
-        // 🧩 Si ya existe, actualiza sus datos
-        return prev.map((p) => (p.id === nuevaParcela.id ? { ...p, ...nuevaParcela } : p));
-      }
-      return [...prev, nuevaParcela];
-    });
-  };
+  // SOFT DELETE
+  async function deleteParcela(id) {
+    const deleted = await plotsService.softDelete(id);
+    setParcelas((prev) => prev.filter((p) => p.id !== id));
+    setParcelasEliminadas((prev) => [deleted, ...prev]);
+    return deleted;
+  }
 
-  // ✏️ Editar parcela existente
-  const editParcela = (id, datosActualizados) => {
-    setParcelas((prev) => prev.map((p) => (p.id === id ? { ...p, ...datosActualizados } : p)));
-  };
+  // RESTORE
+  async function restoreParcela(id) {
+    // tu backend en PUT /api/plots/:id ya incluye { crop, responsible }
+    const restored = await plotsService.update(id, { status: "active" });
 
-  // ❌ Eliminar parcela (la mueve al historial)
-  const deleteParcela = (id) => {
-    setParcelas((prev) => {
-      const eliminada = prev.find((p) => p.id === id);
-      if (eliminada) {
-        const registroEliminacion = {
-          ...eliminada,
-          fechaEliminacion: new Date().toISOString(),
-        };
+    // evita duplicado si por alguna razón ya estaba en la lista
+    setParcelas((prev) => [restored, ...prev.filter((p) => p.id !== id)]);
+    setParcelasEliminadas((prev) => prev.filter((p) => p.id !== id));
 
-        // 🚫 Evitar duplicados en el historial
-        setParcelasEliminadas((prevDel) => {
-          const yaExiste = prevDel.some((p) => p.id === registroEliminacion.id);
-          return yaExiste ? prevDel : [...prevDel, registroEliminacion];
-        });
-      }
+    return restored;
+  }
 
-      // 🧹 Quitar del array principal
-      return prev.filter((p) => p.id !== id);
-    });
-  };
+  // HARD DELETE (opcional, para pantalla de eliminadas)
+  async function hardDeleteParcela(id) {
+    await plotsService.hardDelete(id);
+    setParcelasEliminadas((prev) => prev.filter((p) => p.id !== id));
+  }
 
-  // ♻️ Restaurar parcela eliminada (sin duplicar)
-  const restoreParcela = (id) => {
-    setParcelasEliminadas((prevDel) => {
-      const restaurada = prevDel.find((p) => p.id === id);
-      if (restaurada) {
-        setParcelas((prev) => {
-          const yaExiste = prev.some((x) => x.id === restaurada.id);
-          if (!yaExiste) {
-            return [...prev, { ...restaurada, fechaEliminacion: undefined }];
-          }
-          return prev; // No la agrega si ya está
-        });
-        return prevDel.filter((p) => p.id !== id);
-      }
-      return prevDel;
-    });
-  };
+  async function clearAll() {
+    const toRemove = [...parcelasEliminadas];
 
-  // 🧹 Limpiar SOLO el historial de eliminadas (ya no toca las activas)
-  const clearAll = () => {
+    await Promise.all(toRemove.map((p) => plotsService.hardDelete(p.id)));
+
     setParcelasEliminadas([]);
-    localStorage.removeItem("parcelasEliminadas");
+  }
+  const value = {
+    parcelas,
+    parcelasEliminadas,
+    loading,
+    error,
+    refresh,
+    addParcela,
+    editParcela,
+    deleteParcela,
+    restoreParcela,
+    hardDeleteParcela,
+    clearAll,
   };
 
-  // 🧠 Contexto compartido
-  return (
-    <ParcelsContext.Provider
-      value={{
-        parcelas,
-        parcelasEliminadas,
-        addParcela,
-        editParcela,
-        deleteParcela,
-        restoreParcela,
-        clearAll,
-      }}
-    >
-      {children}
-    </ParcelsContext.Provider>
-  );
+  return <ParcelsContext.Provider value={value}>{children}</ParcelsContext.Provider>;
 }
 
-// 🔹 Hook para consumir el contexto fácilmente
-export const useParcels = () => useContext(ParcelsContext);
+export function useParcels() {
+  const ctx = useContext(ParcelsContext);
+  if (!ctx) throw new Error("useParcels must be used within <ParcelsProvider>");
+  return ctx;
+}

@@ -1,6 +1,8 @@
 /* ====== PANEL FUTURISTA ====== */
 .dashboard-container-futuristic {
-  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: radial-gradient(circle at top right, #001f0f 0%, #0a2f1d 35%, #001208 100%);
   color: #e0ffe5;
   padding: 2rem;
@@ -84,7 +86,9 @@
   border: 1px solid rgba(0, 255, 136, 0.15);
   backdrop-filter: none; /* ❌ quita el blur que crea la neblina */
   box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); /* sombra sutil sin bruma */
-  min-height: 60vh;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   transition: all 0.3s ease;
 }
 
