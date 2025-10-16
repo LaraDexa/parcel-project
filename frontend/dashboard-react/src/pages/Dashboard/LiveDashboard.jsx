@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  FaTemperatureHigh,
-  FaTint,
-  FaCloudRain,
-  FaSun,
-  FaSpinner,
-} from "react-icons/fa";
+import { FaTemperatureHigh, FaTint, FaCloudRain, FaSun, FaSpinner } from "react-icons/fa";
 import "./Dashboard.css";
 
 function LiveDashboard() {
@@ -20,41 +14,37 @@ function LiveDashboard() {
   const [loading, setLoading] = useState(true);
 
   // 🔄 Obtener datos promedio del arreglo devuelto
-const fetchSensorData = async (sensor) => {
-  try {
-    const res = await fetch(
-      `https://sensores-async-api.onrender.com/api/sensors/${sensor}`,
-      { cache: "no-store" }
-    );
-
-    // Leer respuesta como texto (por si el stream no está cerrado aún)
-    const text = await res.text();
-
-    // Intentar convertir manualmente a JSON
-    let json;
+  const fetchSensorData = async (sensor) => {
     try {
-      json = JSON.parse(text);
-    } catch (err) {
-      console.warn(`⚠️ No se pudo parsear JSON del sensor ${sensor}:`, err);
+      const res = await fetch(`https://sensores-async-api.onrender.com/api/sensors/${sensor}`, {
+        cache: "no-store",
+      });
+
+      // Leer respuesta como texto (por si el stream no está cerrado aún)
+      const text = await res.text();
+
+      // Intentar convertir manualmente a JSON
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch (err) {
+        console.warn(`⚠️ No se pudo parsear JSON del sensor ${sensor}:`, err);
+        return null;
+      }
+
+      // Validar que sea array y calcular promedio
+      if (Array.isArray(json) && json.length > 0) {
+        const values = json.map((item) => item.value);
+        const avg = (values.reduce((acc, v) => acc + v, 0) / values.length).toFixed(2);
+        return avg;
+      }
+
+      return null;
+    } catch (error) {
+      console.error(`Error obteniendo ${sensor}:`, error);
       return null;
     }
-
-    // Validar que sea array y calcular promedio
-    if (Array.isArray(json) && json.length > 0) {
-      const values = json.map((item) => item.value);
-      const avg = (
-        values.reduce((acc, v) => acc + v, 0) / values.length
-      ).toFixed(2);
-      return avg;
-    }
-
-    return null;
-  } catch (error) {
-    console.error(`Error obteniendo ${sensor}:`, error);
-    return null;
-  }
-};
-
+  };
 
   // 📡 Actualizar todos los sensores
   const updateAllSensors = async () => {
@@ -80,8 +70,8 @@ const fetchSensorData = async (sensor) => {
 
   useEffect(() => {
     updateAllSensors();
-    const interval = setInterval(updateAllSensors, 3000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(updateAllSensors, 3000);
+    // return () => clearInterval(interval);
   }, []);
 
   const SensorCard = ({ title, value, unit, icon: Icon, color, subtitle }) => (

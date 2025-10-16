@@ -28,9 +28,7 @@ function MapDashboard() {
   const { parcelas } = useParcels();
 
   // Si no hay parcelas, usa una ubicación por defecto
-  const defaultCoords = parcelas.length
-    ? [parcelas[0].lat, parcelas[0].lng]
-    : [21.1619, -86.8515];
+  const defaultCoords = parcelas.length ? [parcelas[0].lat, parcelas[0].lng] : [21.1619, -86.8515];
 
   return (
     <motion.div
@@ -98,4 +96,3 @@ function MapDashboard() {
 }
 
 export default MapDashboard;
- 

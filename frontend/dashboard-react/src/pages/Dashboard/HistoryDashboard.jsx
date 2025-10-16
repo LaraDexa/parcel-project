@@ -58,12 +58,7 @@ function HistoryDashboard() {
       {
         label: "Distribución de Cultivos",
         data: [40, 25, 20, 15],
-        backgroundColor: [
-          "#00ff88",
-          "#00bfa5",
-          "#8bc34a",
-          "#cddc39",
-        ],
+        backgroundColor: ["#00ff88", "#00bfa5", "#8bc34a", "#cddc39"],
         borderWidth: 1,
       },
     ],

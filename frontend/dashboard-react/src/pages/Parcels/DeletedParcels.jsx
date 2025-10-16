@@ -30,9 +30,7 @@ function DeletedParcels() {
         <h2>
           <FaTrashAlt className="deleted-icon" /> Parcelas Eliminadas
         </h2>
-        <p className="deleted-subtitle">
-          Historial de terrenos que fueron removidos del sistema
-        </p>
+        <p className="deleted-subtitle">Historial de terrenos que fueron removidos del sistema</p>
       </div>
 
       {/* 🧹 Botón de limpiar historial */}
@@ -83,10 +81,7 @@ function DeletedParcels() {
                     })}
                   </td>
                   <td>
-                    <button
-                      className="btn-restore"
-                      onClick={() => setConfirmRestore(p)}
-                    >
+                    <button className="btn-restore" onClick={() => setConfirmRestore(p)}>
                       <FaUndo /> Restaurar
                     </button>
                   </td>
@@ -130,10 +125,7 @@ function DeletedParcels() {
                 ¿Deseas restaurar la parcela <strong>{confirmRestore.nombre}</strong>?
               </p>
               <div className="modal-actions">
-                <button
-                  className="btn-cancelar"
-                  onClick={() => setConfirmRestore(null)}
-                >
+                <button className="btn-cancelar" onClick={() => setConfirmRestore(null)}>
                   Cancelar
                 </button>
                 <button
@@ -169,14 +161,9 @@ function DeletedParcels() {
             >
               <FaExclamationTriangle className="modal-warning-icon" />
               <h3>Limpiar Historial</h3>
-              <p>
-                ¿Deseas eliminar permanentemente todas las parcelas del historial?
-              </p>
+              <p>¿Deseas eliminar permanentemente todas las parcelas del historial?</p>
               <div className="modal-actions">
-                <button
-                  className="btn-cancelar"
-                  onClick={() => setConfirmClear(false)}
-                >
+                <button className="btn-cancelar" onClick={() => setConfirmClear(false)}>
                   Cancelar
                 </button>
                 <button

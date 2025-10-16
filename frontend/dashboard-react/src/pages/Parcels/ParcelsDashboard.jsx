@@ -1,24 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  FaPlus,
-  FaEdit,
-  FaTrash,
-  FaTractor,
-  FaExclamationTriangle,
-} from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrash, FaTractor, FaExclamationTriangle } from "react-icons/fa";
 import ParcelFormModal from "./ParcelFormModal";
 import { useParcels } from "../../context/ParcelsContext";
 import "./parcels.css";
 
 function ParcelsDashboard() {
-  const {
-    parcelas,
-    addParcela,
-    editParcela,
-    deleteParcela,
-    parcelasEliminadas,
-  } = useParcels();
+  const { parcelas, addParcela, editParcela, deleteParcela, parcelasEliminadas } = useParcels();
 
   const [showModal, setShowModal] = useState(false);
   const [selectedParcela, setSelectedParcela] = useState(null);
@@ -30,10 +18,7 @@ function ParcelsDashboard() {
   }, [parcelas]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "parcelasEliminadas",
-      JSON.stringify(parcelasEliminadas)
-    );
+    localStorage.setItem("parcelasEliminadas", JSON.stringify(parcelasEliminadas));
   }, [parcelasEliminadas]);
 
   // 🧩 Guardar o editar
@@ -127,10 +112,7 @@ function ParcelsDashboard() {
                     >
                       <FaEdit />
                     </button>
-                    <button
-                      className="btn-delete"
-                      onClick={() => handleDeleteRequest(p)}
-                    >
+                    <button className="btn-delete" onClick={() => handleDeleteRequest(p)}>
                       <FaTrash />
                     </button>
                   </td>
@@ -180,20 +162,13 @@ function ParcelsDashboard() {
               <FaExclamationTriangle className="modal-warning-icon" />
               <h3>Confirmar Eliminación</h3>
               <p>
-                ¿Deseas eliminar la parcela{" "}
-                <strong>{confirmDelete.nombre}</strong>?
+                ¿Deseas eliminar la parcela <strong>{confirmDelete.nombre}</strong>?
               </p>
               <div className="modal-actions">
-                <button
-                  className="btn-cancelar"
-                  onClick={() => setConfirmDelete(null)}
-                >
+                <button className="btn-cancelar" onClick={() => setConfirmDelete(null)}>
                   Cancelar
                 </button>
-                <button
-                  className="btn-confirmar"
-                  onClick={confirmDeleteAction}
-                >
+                <button className="btn-confirmar" onClick={confirmDeleteAction}>
                   Eliminar
                 </button>
               </div>

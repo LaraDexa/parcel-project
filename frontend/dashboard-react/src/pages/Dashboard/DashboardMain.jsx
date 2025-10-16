@@ -26,9 +26,7 @@ function DashboardMain() {
             Agro<span>DevOps</span> Dashboard
           </h2>
         </div>
-        <p className="subtitle">
-          Monitoreo inteligente de parcelas en tiempo real
-        </p>
+        <p className="subtitle">Monitoreo inteligente de parcelas en tiempo real</p>
       </motion.header>
 
       {/* NAVIGATION */}
@@ -40,45 +38,35 @@ function DashboardMain() {
       >
         <NavLink
           to="/dashboard/live"
-          className={({ isActive }) =>
-            `nav-item-futuristic ${isActive ? "active" : ""}`
-          }
+          className={({ isActive }) => `nav-item-futuristic ${isActive ? "active" : ""}`}
         >
           <FaSeedling /> <span>En Vivo</span>
         </NavLink>
 
         <NavLink
           to="/dashboard/history"
-          className={({ isActive }) =>
-            `nav-item-futuristic ${isActive ? "active" : ""}`
-          }
+          className={({ isActive }) => `nav-item-futuristic ${isActive ? "active" : ""}`}
         >
           <FaChartLine /> <span>Histórico</span>
         </NavLink>
 
         <NavLink
           to="/dashboard/map"
-          className={({ isActive }) =>
-            `nav-item-futuristic ${isActive ? "active" : ""}`
-          }
+          className={({ isActive }) => `nav-item-futuristic ${isActive ? "active" : ""}`}
         >
           <FaMapMarkedAlt /> <span>Mapa</span>
         </NavLink>
 
         <NavLink
           to="/dashboard/parcels"
-          className={({ isActive }) =>
-            `nav-item-futuristic ${isActive ? "active" : ""}`
-          }
+          className={({ isActive }) => `nav-item-futuristic ${isActive ? "active" : ""}`}
         >
           <FaTractor /> <span>Parcelas</span>
         </NavLink>
 
         <NavLink
           to="/dashboard/deleted"
-          className={({ isActive }) =>
-            `nav-item-futuristic ${isActive ? "active" : ""}`
-          }
+          className={({ isActive }) => `nav-item-futuristic ${isActive ? "active" : ""}`}
         >
           <FaTrashAlt /> <span>Eliminadas</span>
         </NavLink>

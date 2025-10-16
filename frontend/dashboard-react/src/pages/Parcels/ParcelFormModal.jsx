@@ -169,9 +169,7 @@ function ParcelFormModal({ parcela, onClose }) {
                 />
               </div>
               {loadingLocation && (
-                <small className="coords-loading">
-                  Obteniendo ubicación actual...
-                </small>
+                <small className="coords-loading">Obteniendo ubicación actual...</small>
               )}
             </div>
 

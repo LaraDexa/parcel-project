@@ -93,10 +93,11 @@
   box-shadow: 0 0 25px rgba(0, 255, 136, 0.25);
 }
 
-
 /* ANIMATED BORDER GLOW */
 .dashboard-content-futuristic:hover {
-  box-shadow: inset 0 0 25px rgba(0, 255, 136, 0.2), 0 0 35px rgba(0, 255, 136, 0.3);
+  box-shadow:
+    inset 0 0 25px rgba(0, 255, 136, 0.2),
+    0 0 35px rgba(0, 255, 136, 0.3);
 }
 
 /* RESPONSIVE */

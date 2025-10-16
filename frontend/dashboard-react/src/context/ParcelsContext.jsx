@@ -10,8 +10,7 @@ export function ParcelsProvider({ children }) {
   // 📦 Cargar desde localStorage al iniciar
   useEffect(() => {
     const storedParcelas = JSON.parse(localStorage.getItem("parcelas")) || [];
-    const storedDeleted =
-      JSON.parse(localStorage.getItem("parcelasEliminadas")) || [];
+    const storedDeleted = JSON.parse(localStorage.getItem("parcelasEliminadas")) || [];
 
     setParcelas(storedParcelas);
     setParcelasEliminadas(storedDeleted);
@@ -23,10 +22,7 @@ export function ParcelsProvider({ children }) {
   }, [parcelas]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "parcelasEliminadas",
-      JSON.stringify(parcelasEliminadas)
-    );
+    localStorage.setItem("parcelasEliminadas", JSON.stringify(parcelasEliminadas));
   }, [parcelasEliminadas]);
 
   // ➕ Agregar o actualizar parcela (evita duplicados)
@@ -35,9 +31,7 @@ export function ParcelsProvider({ children }) {
       const existe = prev.some((p) => p.id === nuevaParcela.id);
       if (existe) {
         // 🧩 Si ya existe, actualiza sus datos
-        return prev.map((p) =>
-          p.id === nuevaParcela.id ? { ...p, ...nuevaParcela } : p
-        );
+        return prev.map((p) => (p.id === nuevaParcela.id ? { ...p, ...nuevaParcela } : p));
       }
       return [...prev, nuevaParcela];
     });
@@ -45,9 +39,7 @@ export function ParcelsProvider({ children }) {
 
   // ✏️ Editar parcela existente
   const editParcela = (id, datosActualizados) => {
-    setParcelas((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, ...datosActualizados } : p))
-    );
+    setParcelas((prev) => prev.map((p) => (p.id === id ? { ...p, ...datosActualizados } : p)));
   };
 
   // ❌ Eliminar parcela (la mueve al historial)
@@ -73,23 +65,22 @@ export function ParcelsProvider({ children }) {
   };
 
   // ♻️ Restaurar parcela eliminada (sin duplicar)
-const restoreParcela = (id) => {
-  setParcelasEliminadas((prevDel) => {
-    const restaurada = prevDel.find((p) => p.id === id);
-    if (restaurada) {
-      setParcelas((prev) => {
-        const yaExiste = prev.some((x) => x.id === restaurada.id);
-        if (!yaExiste) {
-          return [...prev, { ...restaurada, fechaEliminacion: undefined }];
-        }
-        return prev; // No la agrega si ya está
-      });
-      return prevDel.filter((p) => p.id !== id);
-    }
-    return prevDel;
-  });
-};
-
+  const restoreParcela = (id) => {
+    setParcelasEliminadas((prevDel) => {
+      const restaurada = prevDel.find((p) => p.id === id);
+      if (restaurada) {
+        setParcelas((prev) => {
+          const yaExiste = prev.some((x) => x.id === restaurada.id);
+          if (!yaExiste) {
+            return [...prev, { ...restaurada, fechaEliminacion: undefined }];
+          }
+          return prev; // No la agrega si ya está
+        });
+        return prevDel.filter((p) => p.id !== id);
+      }
+      return prevDel;
+    });
+  };
 
   // 🧹 Limpiar SOLO el historial de eliminadas (ya no toca las activas)
   const clearAll = () => {
